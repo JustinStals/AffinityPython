@@ -8,7 +8,9 @@ List: The Affinity equivalent of a spreadsheet. It contains a collection of eith
 List Entry: The Affinity equivalent of a row in a spreadsheet.
 
 Field: The Affinity equivalent of a column in a spreadsheet. A field can be specific to a given list, or it can be global.
+
 Field Value: The Affinity equivalent of the data in a spreadsheet cell.
+
 Person: Contacts of your organization.
 
 Organization: An external company that your team is in touch with - this could be an organization that you are trying to invest in, sell to, or establish a relationship with.
