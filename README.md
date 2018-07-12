@@ -15,6 +15,8 @@ Person: Contacts of your organization.
 
 Organization: An external company that your team is in touch with - this could be an organization that you are trying to invest in, sell to, or establish a relationship with.
 
+Opportunity: A potential future sale or deal for your team, generally used to track the progress of and revenue generated from sales and deals in your pipeline with a specific organization.
+
 Note: A note object contains content, which is a string containing the note body. In addition, a note can be associated with multiple people or organizations.
 
 # API Methods
