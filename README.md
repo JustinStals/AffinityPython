@@ -1,6 +1,6 @@
 # Affinity Python Wrapper
 
-A Python wrapper for Affinity's CRM platform. Includes functions for all available requests to their API and an OOD representation of their data model.
+A Python wrapper for Affinity's CRM platform. Includes functions for all available requests to their API and an OOD representation of their data model. Refer to: https://api-docs.affinity.co/
 
 # Classes
 
@@ -89,7 +89,25 @@ get_organizations_global_fields()
 populate_organization(json_in)
 
 
+OPPORTUNITIES
+
+get_opportunities(term, page_size, page_token)
+
+get_opportunity(opportunity_id)
+
+create_opportunities(name, person_ids, organization_ids)
+
+update_opportunity(organization_id, name, person_ids, orgnaization_ids)
+
+delete_opportunity(opportunity_id)
+
+
 NOTES
 
 populate_note(json_in)
+
+
+RELATIONSHIP STRENGTHS
+
+get_relationship_strength(internal_id, external_id)
 

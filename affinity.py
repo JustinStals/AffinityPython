@@ -12,7 +12,6 @@ __author__ = "Justin Stals"
 
 import json
 import datetime
-import affinity
 import requests as re
 from requests.auth import HTTPBasicAuth
 
@@ -36,13 +35,13 @@ def get(call):
 	return r.json()
 
 def post(call, data):
-	r = re.post(call, data=json.dumps(data), auth=HTTPBasicAuth('', api_key))
+	r = re.post(call, data=data, auth=HTTPBasicAuth('', api_key))
 	if check_err(r):
 		return None
 	return r.json()
 
 def put(call, data):
-	r = re.put(call, data=json.dumps(data), auth=HTTPBasicAuth('', api_key))
+	r = re.put(call, data=data, auth=HTTPBasicAuth('', api_key))
 	if check_err(r):
 		return None
 	return r.json()
@@ -94,7 +93,7 @@ def get_all_lists():
 
 def get_list(list_id):
 # Gets the details for a specific list given the existing list id.
-	call = endpoint_base + '/lists/' + list_id
+	call = endpoint_base + '/lists/' + str(list_id)
 	return get(call)
 
 # ------------------------------------------------------ #
@@ -121,7 +120,7 @@ class ListEntry:
 
 def populate_list_entry(json_in):
 	list_entry_out = ListEntry(
-		json_in['list_entry_id'],
+		json_in['id'],
 		json_in['list_id'],
 		json_in['creator_id'],
 		json_in['entity_id'],
@@ -132,23 +131,23 @@ def populate_list_entry(json_in):
 
 def get_all_list_entries(list_id):
 # Fetches all the list entries in the list with the supplied list id.
-	call = endpoint_base + '/lists/' + list_id + '/list-entries'
+	call = endpoint_base + '/lists/' + str(list_id) + '/list-entries'
 	return get(call)
 
 def get_list_entry(list_id, list_entry_id):
 # Fetches a list entry with a specified id.
-	call = endpoint_base + '/lists/' + list_id + '/list-entries/' + list_entry_id
+	call = endpoint_base + '/lists/' + str(list_id) + '/list-entries/' + list_entry_id
 	return get(call)
 
 def create_list_entry(list_id, entity_id, creator_id):
 # Creates a new list entry in the list with the supplied list id.
-	call = endpoint_base + '/lists/' + list_id + '/list-entries'
+	call = endpoint_base + '/lists/' + str(list_id) + '/list-entries'
 	data = {'entity_id':entity_id, 'creator_id':creator_id}
 	return post(call, data)
 
 def delete_list_entry(list_id, list_entry_id):
 # Deletes a list entry with a specified list_entry_id.
-	call = endpoint_base + '/lists/' + list_id + '/list-entries/' + list_entry_id
+	call = endpoint_base + '/lists/' + str(list_id) + '/list-entries/' + str(list_entry_id)
 	return delete(call)
 
 # ------------------------------------------------------ #
@@ -215,11 +214,11 @@ def get_field_values(person_id, organization_id, list_entry_id):
 # Returns all field values attached to a person, organization or list_entry.
 	call = endpoint_base + '/field-values'
 	if person_id:
-		call += '?person_id=' + person_id
+		call += '?person_id=' + str(person_id)
 	if organization_id:
-		call += '?organization_id=' + organization_id
+		call += '?organization_id=' + str(organization_id)
 	if list_entry_id:
-		call += '?list_entry_id=' + list_entry_id
+		call += '?list_entry_id=' + str(list_entry_id)
 	return get(call)
 
 def create_field_value(field_id, entity_id, list_entry_id, value):
@@ -230,13 +229,13 @@ def create_field_value(field_id, entity_id, list_entry_id, value):
 
 def update_field_value(field_value_id, value):
 # Updates the existing field value with field_value_id with the supplied parameters.
-	call = endpoint_base + '/field-values/' + field_value_id
+	call = endpoint_base + '/field-values/' + str(field_value_id)
 	data = {'value':value}
 	return put(call, data)
 
 def delete_field_value(field_value_id):
 # Deletes an field value with the specified field_value_id.
-	call = endpoint_base + '/field-values/' + field_value_id
+	call = endpoint_base + '/field-values/' + str(field_value_id)
 	return delete(call)
 
 # ------------------------------------------------------ #
@@ -279,7 +278,7 @@ def populate_person(json_in):
 
 def get_persons(term, page_size, page_token):
 # Searches your teams data and fetches all the persons that meet the search criteria.
-	call = endpoint_base + '/persons'
+	call = endpoint_base + 'persons'
 	if term:
 		call += '?term=' + term
 	else:
@@ -293,30 +292,30 @@ def get_persons(term, page_size, page_token):
 
 def get_person(person_id):
 # Fetches a person with a specified person_id.
-	call = endpoint_base + '/persons/' + person_id
+	call = endpoint_base + '/persons/' + str(person_id)
 	return get(call)
 
 def create_person(first_name, last_name, emails, phone_numbers, organization_ids):
 # Creates a new person with the supplied parameters.
 	call = endpoint_base + '/persons'
-	data = {'first_name':first_name, 'last_name':last_name, 'emails':emails, 'phone_numbers':phone_numbers, 'organization_ids':organization_ids}
+	data = {'first_name':first_name, 'last_name':last_name, 'emails[]':emails, 'phone_numbers[]':phone_numbers, 'organization_ids[]':organization_ids}
 	return post(call, data)
 
 def update_person(person_id, first_name, last_name, emails, phone_numbers, organization_ids):
 # Updates an existing person with person_id with the supplied parameters. Only attributes that need to be changed must be passed in.
-	call = endpoint_base + '/persons/' + person_id
-	data = {'first_name':first_name, 'last_name':last_name, 'emails':emails, 'phone_numbers':phone_numbers, 'organization_ids':organization_ids}
+	call = endpoint_base + '/persons/' + str(person_id)
+	data = {'first_name':first_name, 'last_name':last_name, 'emails':emails, 'phone_numbers[]':phone_numbers, 'organization_ids[]':organization_ids}
 	return put(call, data)
 
 def delete_person(person_id):
 # Deletes a person with a specified person_id.
-	call = endpoint_base + '/persons/' + person_id
+	call = endpoint_base + '/persons/' + str(person_id)
 	return delete(call)
 
-def get_people_global_fields(person_id):
+def get_people_global_fields():
 # Fetches an array of all the global fields that exist on people.
 	call = endpoint_base + '/persons/fields'
-	return delete(call)
+	return get(call)
 
 # ------------------------------------------------------ #
 # ORGANIZATIONS
@@ -334,23 +333,29 @@ class Organization:
 		self.domain = domain
 		# (string) The website name of the organization. 
 		self.person_ids = person_ids
-		# (string[]) An array of unique identifiers of person that are associated with the organization
+		# (string[]) An array of unique identifiers of people that are associated with the organization
 		self.org_global = org_global
 		# (boolean) Returns whether this organization is a part of Affinity's global dataset of organizations.
 		self.list_entries = list_entries
 		# (ListEntry[])	An array of list entry resources associated with the organization, only returned as part of the Get a specific organization endpoint.
 
 def populate_organization(json_in):
-	organization_out = Person(
-		json_in['person_id'],
-		json_in['person_type'],
-		json_in['first_name'],
-		json_in['last_name'],
-		json_in['emails'],
-		json_in['phone_numbers'],
-		json_in['primary_email'],
-		json_in['organization_ids'],
-		json_in['list_entries']
+	try:
+		person_ids = json_in['person_ids']
+	except KeyError:
+		person_ids = ''
+	try:
+		list_entries = json_in['list_entries']
+	except KeyError:
+		list_entries = ''
+
+	organization_out = Organization(
+		json_in['id'],
+		json_in['name'],
+		json_in['domain'],
+		person_ids,
+		json_in['global'],
+		list_entries
 	)
 	return organization_out
 
@@ -370,7 +375,7 @@ def get_organizations(term, page_size, page_token):
 
 def get_organization(organization_id):
 # Fetches an organization with a specified organization_id.
-	call = endpoint_base + '/organizations/' + organization_id
+	call = endpoint_base + '/organizations/' + str(organization_id)
 	return get(call)
 
 def create_organization(name, domain, person_ids):
@@ -381,19 +386,99 @@ def create_organization(name, domain, person_ids):
 
 def update_organization(organization_id, name, domain, person_ids):
 # Updates an existing organization with organization_id with the supplied parameters.
-	call = endpoint_base + '/organizations/' + organization_id
+	call = endpoint_base + '/organizations/' + str(organization_id)
 	data = {'name':name, 'domain':domain, 'person_ids':person_ids}
 	return put(call, data)
 
-def delete_organization(organizaton_id):
+def delete_organization(organization_id):
 # Deletes an organization with a specified organization_id.
-	call = endpoint_base + '/organizations/' + organization_id
+	call = endpoint_base + '/organizations/' + str(organization_id)
 	return delete(call)
 
 def get_organizations_global_fields():
 # Fetches an array of all the global fields that exist on organizations.
 	call = endpoint_base + '/organizations/fields'
 	return get(call)
+
+
+# ------------------------------------------------------ #
+# OPPORTUNITIES
+# ------------------------------------------------------ #
+
+class Organization:
+	
+	'A potential future sale or deal for your team, generally used to track the progress of and revenue generated from sales and deals in your pipeline with a specific organization.'
+	
+	def __init__(self, opportunity_id, name, person_ids, organization_ids, list_entries):
+		self.id = opportunity_id
+		# (integer) The unique identifier of the opportunity object.
+		self.name = name
+		# (integer) The name of the opprtunity (see below).
+		self.person_ids = person_ids
+		# (string[]) An array of unique identifiers of people that are associated with the opportunity.
+		self.organization_ids = organization_ids
+		# (string[]) An array of unique identifiers of organizations that are associated with the opportunity.
+		self.list_entries = list_entries
+		# (ListEntry[])	An array of list entry resources associated with the organization, only returned as part of the Get a specific organization endpoint.
+
+def populate_organization(json_in):
+	try:
+		person_ids = json_in['person_ids']
+	except KeyError:
+		person_ids = ''
+	try:
+		organization_ids = json_in['organization_ids']
+	except KeyError:
+		organization_ids = ''
+	try:
+		list_entries = json_in['list_entries']
+	except KeyError:
+		list_entries = ''
+
+	organization_out = Organization(
+		json_in['id'],
+		json_in['name'],
+		person_ids,
+		organization_ids,
+		list_entries
+	)
+	return organization_out
+
+def get_opportunities(term, page_size, page_token):
+# Searches your team's data and fetches all the opportunities that meet the search criteria.
+	call = endpoint_base + '/opportunities'
+	if term:
+		call += '?term=' + term
+	else:
+		print('Usage: get_opportunities(term, page_size, page_token)')
+		return
+	if page_size:
+		call += '&page_size=' + page_size
+	if page_token:
+		call += '&page_token=' + page_token
+	return get(call)
+
+def get_opportunity(opportunity_id):
+# Fetches an organization with a specified opportunity_id.
+	call = endpoint_base + '/opportunities/' + str(opportunity_id)
+	return get(call)
+
+def create_opportunities(name, person_ids, organization_ids):
+# Creates a new opportunity with the supplied parameters.
+	call = endpoint_base + '/opportunities'
+	data = {'name':name, 'list_id':list_id, 'person_ids':person_ids, 'organization_ids':organization_ids}
+	return post(call, data)
+
+def update_opportunity(organization_id, name, person_ids, orgnaization_ids):
+# Updates an existing opportunity with opportunity_id with the supplied parameters.
+	call = endpoint_base + '/opportunities/' + str(opportunity_id)
+	data = {'name':name, 'person_ids':person_ids, 'organization_ids':organization_ids}
+	return put(call, data)
+
+def delete_opportunity(opportunity_id):
+# Deletes an opportunity with a specified opportunity_id.
+	call = endpoint_base + '/opportunities/' + str(opportunity_id)
+	return delete(call)
 
 # ------------------------------------------------------ #
 # NOTES
@@ -420,12 +505,31 @@ class Note:
 def populate_note(json_in):
 	note_out = Note(
 		json_in['note_id'],
-		son_in['creator_id'],
+		json_in['creator_id'],
 		json_in['person_ids'],
 		json_in['organization_ids'],
 		json_in['content'],
 		json_in['created_at']
 	)
+
+def create_note(person_ids, organization_ids, opportunity_ids, content, gmail_id, creator_id):
+# Creates a new organization with the supplied parameters.
+	call = endpoint_base + '/notes'
+	data = {'person_ids':person_ids, 'organization_ids':organization_ids, 'opportunity_ids':opportunity_ids, 'content':content, 'gmail_id':gmail_id, 'creator_id':creator_id}
+	return post(call, data)
+
+# ------------------------------------------------------ #
+# RELATIONSHIP STRENGTHS
+# ------------------------------------------------------ #
+
+def get_relationship_strength(internal_id, external_id):
+	call = endpoint_base + '/relationship-strengths'
+	if internal_id and external_id:
+		call += '?external_id=' + str(external_id) + '&internal_id=' + str(internal_id)
+	else:
+		print('Usage: get_relationship_strength(internal_id, external_id)')
+		return
+	return get(call)
 
 # ------------------------------------------------------ #
 # ERRORS
