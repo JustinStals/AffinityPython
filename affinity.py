@@ -405,7 +405,7 @@ def get_organizations_global_fields():
 # OPPORTUNITIES
 # ------------------------------------------------------ #
 
-class Organization:
+class Opportunity:
 	
 	'A potential future sale or deal for your team, generally used to track the progress of and revenue generated from sales and deals in your pipeline with a specific organization.'
 	
@@ -421,7 +421,7 @@ class Organization:
 		self.list_entries = list_entries
 		# (ListEntry[])	An array of list entry resources associated with the organization, only returned as part of the Get a specific organization endpoint.
 
-def populate_organization(json_in):
+def populate_opportunity(json_in):
 	try:
 		person_ids = json_in['person_ids']
 	except KeyError:
@@ -435,14 +435,14 @@ def populate_organization(json_in):
 	except KeyError:
 		list_entries = ''
 
-	organization_out = Organization(
+	opportunity_out = Opportunity(
 		json_in['id'],
 		json_in['name'],
 		person_ids,
 		organization_ids,
 		list_entries
 	)
-	return organization_out
+	return opportunity_out
 
 def get_opportunities(term, page_size, page_token):
 # Searches your team's data and fetches all the opportunities that meet the search criteria.
